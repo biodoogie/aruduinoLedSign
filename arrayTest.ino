@@ -1,8 +1,11 @@
 #include <FastLED.h>
 
 #define LED_PIN     6
-#define NUM_LEDS    6
 
+//NUM
+#define NUM_LEDS    11
+
+//Number of leds that make up each letter
 const int numA = 1;
 const int numN = 1;
 const int numG = 1;
@@ -60,12 +63,18 @@ const int NUM_LETTERS = 11;
   int letterOn[NUM_LETTERS] = {0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0};
   //letterFade range from 0 to 255 where 0 is brightest
   int letterFade[NUM_LETTERS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  //Number of leds for each letter 
-  int letterLedNum[NUM_LETTERS] = {aNum, bNum, cNum, dNum, eNum, fNum};
+  //Number of leds for each letter  - make sure letters are in the order they are stringed together
+  int letterLedNum[NUM_LETTERS] = {numA, numN, numG, numE, numL, numB, numO, numT, numI, numC, numS};
   
 
   int counter = 0;
   int currentLetter = 0;
+  //letterChangeTime - ~time in ms for each change in light 
+  //letterFadeTime - time to increment fade value in 
+  int letterChangeTime = 300;
+  int letterFadeTime = 65;
+ long int lastTimeLetterChange = 0;
+ long int lastFadeTimeChange = 0;
 
 CRGB leds[NUM_LEDS];
 int singleFadeValue;
@@ -85,37 +94,48 @@ void setup() {
 
 
 void loop() {
-    lastTime = millis();
-
-
   
-    // for(int k = 0; k < NUM_LETTERS; k++){
-    //   // Serial.println(k);
-    //   if(letterFade[k] >= 255) {
-    //     letterFade[k] = 0;
-    //   } else {
-    //     singleFadeValue = letterFade[k];
-    //     letterFade[k]= singleFadeValue+1;
-      
-    //   }
-    //   // delay(10);
-    //   // Serial.println(letterFade[k]);
-    // }
 
 
     
-    
-    
-    //currentLetter to turn on or off
-    currentLetter = counter%NUM_LETTERS;
+    //changes the state of next letter in sequence  as ordered in array 
     //current letter will go to opposite state on/off
-    letterOn[currentLetter] = !letterOn[currentLetter];
+    if ((millis()-lastTimeLetterChange)>letterChangeTime){
+    
+      currentLetter = counter%NUM_LETTERS;
+      letterOn[currentLetter] = !letterOn[currentLetter];
+      lastTimeLetterChange = millis();
+      letterFade[currentLetter] = 0;
+      counter++;
+    }
+
+
+//comment out this if-statment if you do not want letters to fade
+    if ((millis()-lastFadeTimeChange)>letterFadeTime){
+      for(int k = 0; k < NUM_LETTERS; k++){
+        // Serial.println(k);
+        if(letterFade[k] >= 255) {
+          letterFade[k] = 0;
+        } else {
+          
+          letterFade[k]= letterFade[k]+5;
+        
+        }
+        // delay(10);
+        // Serial.println(letterFade[k]);
+      }
+      lastFadeTimeChange = millis();
+
+    }
+    
         
     
      writeByArray(letterLedNum, letterColors, letterFade, letterOn);
      //Delay determines how quickly move betweent letters
-     delay(500);
-    counter++;
+  
+
+
+    
  }
 
 
@@ -136,8 +156,7 @@ void writeByArray( int ledNum[NUM_LETTERS], int colors[NUM_LETTERS][3], int fade
         for(int j = startValue; j < endValue; j++) {
             
             leds[j] = CRGB(colors[i][0]*on[i], colors[i][1]*on[i], colors[i][2]*on[i]);
-            singleFadeValue = fadeValue[i];
-            leds[j].fadeToBlackBy(singleFadeValue);
+            leds[j].fadeLightBy(fadeValue[i]);
             
         }
         if (i==1){
