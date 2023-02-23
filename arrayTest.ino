@@ -3,16 +3,21 @@
 #define LED_PIN     6
 #define NUM_LEDS    6
 
-const int aNum = 1;
-const int bNum = 1;
-const int cNum = 1;
-const int dNum = 1;
-const int eNum = 1;
-const int fNum = 1;
+const int numA = 1;
+const int numN = 1;
+const int numG = 1;
+const int numE = 1;
+const int numL= 1;
+const int numB = 1;
+const int numO = 1;
+const int numT = 1;
+const int numI = 1;
+const int numC = 1;
+const int numS = 1;
 
 unsigned long lastTime;
 
-const int NUM_LETTERS = 6;
+const int NUM_LETTERS = 11;
 
 //each row is one letters rgb value 
   int letterColors[NUM_LETTERS][3] = {
@@ -33,13 +38,28 @@ const int NUM_LETTERS = 6;
     },
     {
       0, 0, 255
-    }  
+    },
+     {
+      255, 0, 0
+    },
+    {
+      0, 255, 0
+    },
+    {
+      0, 0, 255
+    },
+    {
+      255, 0, 0
+    },
+    {
+      0, 255, 0
+    } 
   };
   
   //letterOn  - 0 = off , 1 == on
-  int letterOn[NUM_LETTERS] = {0, 0, 0, 0, 0, 0};
+  int letterOn[NUM_LETTERS] = {0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0};
   //letterFade range from 0 to 255 where 0 is brightest
-  int letterFade[NUM_LETTERS] = {0, 0, 0, 0, 0, 0};
+  int letterFade[NUM_LETTERS] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   //Number of leds for each letter 
   int letterLedNum[NUM_LETTERS] = {aNum, bNum, cNum, dNum, eNum, fNum};
   
