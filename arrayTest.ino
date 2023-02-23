@@ -1,25 +1,27 @@
 #include <FastLED.h>
 
+//pin on arduino where led signal pin is plugged
 #define LED_PIN     6
 
-//NUM
-#define NUM_LEDS    11
+//total number leds for whole sign
+#define NUM_LEDS    29
 
-//Number of leds that make up each letter
-const int numA = 1;
-const int numN = 1;
-const int numG = 1;
-const int numE = 1;
-const int numL= 1;
-const int numB = 1;
-const int numO = 1;
-const int numT = 1;
-const int numI = 1;
-const int numC = 1;
-const int numS = 1;
+//Number of leds that make up each letter - when added together should equal total leds
+const int numA = 3;
+const int numN = 2;
+const int numG = 3;
+const int numE = 2;
+const int numL= 3;
+const int numB = 2;
+const int numO = 3;
+const int numT = 2;
+const int numI = 3;
+const int numC = 2;
+const int numS = 4;
 
-unsigned long lastTime;
 
+
+//number of letters in the sign
 const int NUM_LETTERS = 11;
 
 //each row is one letters rgb value 
@@ -34,28 +36,28 @@ const int NUM_LETTERS = 11;
       0, 0, 255
     },
     {
-      255, 0, 0
+      100, 100, 100
     },
     {
-      0, 255, 0
+      255, 255, 0
     },
     {
-      0, 0, 255
+      0,255, 255
     },
      {
-      255, 0, 0
+      255, 0, 255
     },
     {
-      0, 255, 0
+      255, 255, 255
     },
     {
-      0, 0, 255
+      200, 200, 100
     },
     {
-      255, 0, 0
+      255, 50, 100
     },
     {
-      0, 255, 0
+      100, 200, 100
     } 
   };
   
@@ -95,9 +97,7 @@ void setup() {
 
 void loop() {
   
-
-
-    
+  
     //changes the state of next letter in sequence  as ordered in array 
     //current letter will go to opposite state on/off
     if ((millis()-lastTimeLetterChange)>letterChangeTime){
@@ -129,9 +129,8 @@ void loop() {
     }
     
         
-    
+    //updates LEDS
      writeByArray(letterLedNum, letterColors, letterFade, letterOn);
-     //Delay determines how quickly move betweent letters
   
 
 
@@ -149,24 +148,20 @@ void writeByArray( int ledNum[NUM_LETTERS], int colors[NUM_LETTERS][3], int fade
     int startValue = 0;
     int endValue = 0;
 
+//sets values for each letter based on the number of leds in the letter
     for (int i = 0; i<NUM_LETTERS; i++){
         
        endValue = startValue+ledNum[i];
-
         for(int j = startValue; j < endValue; j++) {
             
             leds[j] = CRGB(colors[i][0]*on[i], colors[i][1]*on[i], colors[i][2]*on[i]);
             leds[j].fadeLightBy(fadeValue[i]);
             
         }
-        if (i==1){
-                  
-                  // Serial.println(fadeValue[i]);
 
-
-        }
         startValue = endValue;
     }
+    //updates the led string with new values set above
     FastLED.show();  
 
 
